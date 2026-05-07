@@ -141,3 +141,24 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+# Screenshots and local captures
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+
+# Claude files
+.claude/
+CLAUDE.md
+*.claude
+
+# Local notes and docs (keep README.md)
+SPEC.md
+HANDOFF.md
+TODO.md
+
+# OS garbage
+Thumbs.db
+.DS_Store
+desktop.ini
