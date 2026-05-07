@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude plugin *)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs",
+      "Bash(npm run *)",
+      "Bash(Start-Sleep -Seconds 4)",
+      "Bash(Get-Content \"C:\\\\Users\\\\user-1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-user-1-Documents-Personal-Projects-services-page\\\\acdc0fc9-285b-4d81-bec9-cb03882ea727\\\\tasks\\\\b647431dz.output\" -Tail 10)",
+      "mcp__playwright__browser_resize",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_take_screenshot",
+      "Bash(Start-Process -NoNewWindow npm -ArgumentList \"run\",\"dev\")",
+      "PowerShell(npm run *)",
+      "mcp__playwright__browser_evaluate",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(Write-Host \"ready\")",
+      "PowerShell(cd \"C:\\\\Users\\\\user-1\\\\Documents\\\\Personal Projects\\\\services-page\"; $html = Get-Content .next\\\\server\\\\app\\\\index.html -Raw; $matches = [regex]::Matches\\($html, '/_next/static/chunks/\\([^\"]+\\\\.js\\)'\\); $matches | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique)",
+      "PowerShell(cd \"C:\\\\Users\\\\user-1\\\\Documents\\\\Personal Projects\\\\services-page\"; $c1 = Get-Content \".next\\\\static\\\\chunks\\\\0gax5dtk4zmpb.js\" -Raw; $c1.Substring\\(0, [Math]::Min\\(300, $c1.Length\\)\\); Write-Host \"---\"; $c2 = Get-Content \".next\\\\static\\\\chunks\\\\0ux0-7x~gp.5o.js\" -Raw; $c2.Substring\\(0, [Math]::Min\\(300, $c2.Length\\)\\))",
+      "PowerShell(vercel *)",
+      "mcp__playwright__browser_console_messages",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/framer-motion/package.json'\\).version\\)\")",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/motion/package.json'\\).version\\)\")",
+      "Bash(netstat -ano)",
+      "Bash(findstr \":3000\")",
+      "Bash(taskkill *)",
+      "PowerShell(Stop-Process *)",
+      "Bash(Start-Sleep -Seconds 5)",
+      "Bash(Get-Content \"C:\\\\Users\\\\user-1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-user-1-Documents-Personal-Projects-services-page\\\\729b424e-fffa-4dbf-b7e1-8ea8e11c72f6\\\\tasks\\\\br92h012o.output\" -Tail 10)"
+    ]
+  }
+}

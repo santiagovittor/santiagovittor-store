@@ -1,0 +1,245 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - link "SANTIAGO VITTOR" [ref=e4] [cursor=pointer]:
+        - /url: /
+      - button "Open menu" [ref=e5]
+  - main [ref=e9]:
+    - generic [ref=e13]:
+      - paragraph [ref=e14]: Buenos Aires → Remote · Full-Stack & AI
+      - heading "I BUILD WEB & AI PRODUCTS" [level=1] [ref=e15]:
+        - text: I BUILD
+        - text: WEB & AI
+        - text: PRODUCTS
+      - paragraph [ref=e16]: I build web products and AI systems for international clients. Based in Buenos Aires, working remotely.
+      - generic [ref=e17]:
+        - link "Book a call" [ref=e18] [cursor=pointer]:
+          - /url: "#contact"
+        - link "See my work" [ref=e19] [cursor=pointer]:
+          - /url: "#projects"
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - paragraph [ref=e23]: What I do
+        - heading "SERVICES" [level=2] [ref=e24]
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - generic: "01"
+          - heading "FULL-STACK DEVELOPMENT" [level=3] [ref=e28]
+          - paragraph [ref=e29]: Production-ready web applications built with React, Next.js, and Node.js. From landing pages to complex data-driven apps.
+          - list [ref=e30]:
+            - listitem [ref=e31]:
+              - generic [ref=e32]: —
+              - text: Next.js App Router & React Server Components
+            - listitem [ref=e33]:
+              - generic [ref=e34]: —
+              - text: REST & GraphQL APIs with Node.js
+            - listitem [ref=e35]:
+              - generic [ref=e36]: —
+              - text: Vercel, Railway, or VPS deployment
+            - listitem [ref=e37]:
+              - generic [ref=e38]: —
+              - text: Performance-first — Core Web Vitals optimized
+          - link "Build with me →" [ref=e39] [cursor=pointer]:
+            - /url: "#contact"
+            - text: Build with me
+            - generic [ref=e40]: →
+        - generic [ref=e41]:
+          - generic: "02"
+          - heading "AI & CHATBOT DEVELOPMENT" [level=3] [ref=e43]
+          - paragraph [ref=e44]: Custom LLM integrations, RAG pipelines, and AI-powered tools that actually work in production — not demos.
+          - list [ref=e45]:
+            - listitem [ref=e46]:
+              - generic [ref=e47]: —
+              - text: RAG pipelines with citation & refusal guardrails
+            - listitem [ref=e48]:
+              - generic [ref=e49]: —
+              - text: Multi-step LLM workflows & prompt engineering
+            - listitem [ref=e50]:
+              - generic [ref=e51]: —
+              - text: No-code UIs for non-technical teams
+            - listitem [ref=e52]:
+              - generic [ref=e53]: —
+              - text: A/B prompt testing & output quality evaluation
+          - link "Build your AI product →" [ref=e54] [cursor=pointer]:
+            - /url: "#contact"
+            - text: Build your AI product
+            - generic [ref=e55]: →
+        - generic [ref=e56]:
+          - generic: "03"
+          - heading "CRM DEVELOPMENT" [level=3] [ref=e58]
+          - paragraph [ref=e59]: Lightweight custom CRMs built around how your team actually works — not the other way around.
+          - list [ref=e60]:
+            - listitem [ref=e61]:
+              - generic [ref=e62]: —
+              - text: Contact & pipeline management
+            - listitem [ref=e63]:
+              - generic [ref=e64]: —
+              - text: Google Sheets / Notion / Airtable integrations
+            - listitem [ref=e65]:
+              - generic [ref=e66]: —
+              - text: Automation with Zapier or Make
+            - listitem [ref=e67]:
+              - generic [ref=e68]: —
+              - text: Role-based access & reporting dashboards
+          - link "Simplify your ops →" [ref=e69] [cursor=pointer]:
+            - /url: "#contact"
+            - text: Simplify your ops
+            - generic [ref=e70]: →
+        - generic [ref=e71]:
+          - generic: "04"
+          - generic [ref=e72]:
+            - heading "DIGITAL ADS & GROWTH" [level=3] [ref=e73]
+            - link "via dubanronald.com" [ref=e74] [cursor=pointer]:
+              - /url: https://dubanronald.com
+          - paragraph [ref=e75]: Performance marketing and paid media managed by dubanronald.com — our partner agency focused on measurable results.
+          - list [ref=e76]:
+            - listitem [ref=e77]:
+              - generic [ref=e78]: —
+              - text: Google Ads & Meta Ads setup and management
+            - listitem [ref=e79]:
+              - generic [ref=e80]: —
+              - text: Landing page creation & A/B testing
+            - listitem [ref=e81]:
+              - generic [ref=e82]: —
+              - text: Analytics setup (GA4, Tag Manager)
+            - listitem [ref=e83]:
+              - generic [ref=e84]: —
+              - text: Monthly reporting with clear ROI metrics
+          - link "Grow your traffic →" [ref=e85] [cursor=pointer]:
+            - /url: "#contact"
+            - text: Grow your traffic
+            - generic [ref=e86]: →
+    - generic [ref=e88]:
+      - generic [ref=e89]:
+        - paragraph [ref=e90]: By the numbers
+        - heading "PROOF" [level=2] [ref=e91]
+      - generic [ref=e92]:
+        - generic [ref=e93]:
+          - generic "4+" [ref=e94]:
+            - generic [ref=e95]: 0+
+          - paragraph [ref=e96]: Years at FoodStyles (London, remote)
+        - generic [ref=e97]:
+          - generic "100%" [ref=e98]:
+            - generic [ref=e99]: 0%
+          - paragraph [ref=e100]: Team adoption on LLM training program
+        - generic [ref=e101]:
+          - generic "3-tier" [ref=e102]:
+            - generic [ref=e103]: 0-tier
+          - paragraph [ref=e104]: Prompt Mastery curriculum designed & delivered
+    - generic [ref=e106]:
+      - generic [ref=e107]:
+        - paragraph [ref=e108]: Selected work
+        - heading "PROJECTS" [level=2] [ref=e109]
+      - generic [ref=e110]:
+        - generic [ref=e111]:
+          - generic [ref=e113]: "2025"
+          - heading "PRODUCTION RAG CHATBOT" [level=3] [ref=e114]
+          - paragraph [ref=e115]: Internal knowledge chatbot for a London-based company. Sentence-aware chunking, cosine retrieval, citation enforcement, and refusal guardrails. No-code UI lets non-technical staff update the knowledge base without touching code.
+          - generic [ref=e116]:
+            - generic [ref=e117]: Python
+            - generic [ref=e118]: Sentence Transformers
+            - generic [ref=e119]: Oracle VM
+            - generic [ref=e120]: Vercel
+        - link "2024 PORTFOLIO RAG CHAT RAG-powered chat that answers questions based exclusively on documented experience. Visitors can ask anything about my background and get grounded, cited answers. RAG JavaScript Next.js" [ref=e121] [cursor=pointer]:
+          - /url: https://santiagovittor.com
+          - generic [ref=e122]:
+            - generic [ref=e123]: "2024"
+            - img [ref=e125]
+          - heading "PORTFOLIO RAG CHAT" [level=3] [ref=e127]
+          - paragraph [ref=e128]: RAG-powered chat that answers questions based exclusively on documented experience. Visitors can ask anything about my background and get grounded, cited answers.
+          - generic [ref=e129]:
+            - generic [ref=e130]: RAG
+            - generic [ref=e131]: JavaScript
+            - generic [ref=e132]: Next.js
+    - generic [ref=e134]:
+      - generic [ref=e135]:
+        - paragraph [ref=e136]: Who I am
+        - heading "ABOUT" [level=2] [ref=e137]
+      - generic [ref=e138]:
+        - generic [ref=e139]:
+          - paragraph [ref=e140]: Full-stack developer and AI specialist based in Buenos Aires. I build production web applications and LLM-powered tools for international clients — from React frontends and Node APIs to RAG pipelines and custom CRMs. Remote-first, shipping real products since 2020.
+          - paragraph [ref=e141]: Most recently at FoodStyles (London), where I spent 4+ years as a developer and designed a three-tier Prompt Mastery curriculum that reached 100% team adoption. I care about systems that work in production — not demos that fall apart when real users show up.
+        - generic [ref=e142]:
+          - paragraph [ref=e143]: Tech stack
+          - generic [ref=e144]:
+            - generic [ref=e145]: Next.js
+            - generic [ref=e146]: React
+            - generic [ref=e147]: TypeScript
+            - generic [ref=e148]: Node.js
+            - generic [ref=e149]: Python
+            - generic [ref=e150]: RAG
+            - generic [ref=e151]: LLM APIs
+            - generic [ref=e152]: Tailwind CSS
+            - generic [ref=e153]: Vercel
+            - generic [ref=e154]: Google Apps Script
+            - generic [ref=e155]: Zapier
+    - generic [ref=e157]:
+      - generic [ref=e158]:
+        - paragraph [ref=e159]: Get in touch
+        - heading "CONTACT" [level=2] [ref=e160]
+      - generic [ref=e161]:
+        - generic [ref=e162]:
+          - generic [ref=e163]:
+            - generic [ref=e164]: Name
+            - textbox "Name" [ref=e165]:
+              - /placeholder: Your name
+          - generic [ref=e166]:
+            - generic [ref=e167]: Email
+            - textbox "Email" [ref=e168]:
+              - /placeholder: your@email.com
+          - generic [ref=e169]:
+            - generic [ref=e170]: Message
+            - textbox "Message" [ref=e171]:
+              - /placeholder: Tell me what you're building...
+          - button "Send message →" [ref=e172]
+        - generic [ref=e173]:
+          - paragraph [ref=e174]: Prefer to chat directly?
+          - link "Message on WhatsApp →" [ref=e175] [cursor=pointer]:
+            - /url: https://wa.me/5491162300345
+            - img [ref=e176]
+            - text: Message on WhatsApp
+            - generic [ref=e178]: →
+  - contentinfo [ref=e179]:
+    - generic [ref=e180]:
+      - generic [ref=e181]:
+        - generic [ref=e182]:
+          - link "SANTIAGO VITTOR" [ref=e183] [cursor=pointer]:
+            - /url: /
+          - paragraph [ref=e184]:
+            - text: Full-Stack Developer & AI Specialist.
+            - text: Buenos Aires, Argentina (Remote).
+        - navigation "Footer navigation" [ref=e185]:
+          - paragraph [ref=e186]: Navigation
+          - list [ref=e187]:
+            - listitem [ref=e188]:
+              - link "Services" [ref=e189] [cursor=pointer]:
+                - /url: "#services"
+            - listitem [ref=e190]:
+              - link "Projects" [ref=e191] [cursor=pointer]:
+                - /url: "#projects"
+            - listitem [ref=e192]:
+              - link "About" [ref=e193] [cursor=pointer]:
+                - /url: "#about"
+            - listitem [ref=e194]:
+              - link "Contact" [ref=e195] [cursor=pointer]:
+                - /url: "#contact"
+        - navigation "Social links" [ref=e196]:
+          - paragraph [ref=e197]: Connect
+          - list [ref=e198]:
+            - listitem [ref=e199]:
+              - link "GitHub →" [ref=e200] [cursor=pointer]:
+                - /url: https://github.com/santiagovittor
+            - listitem [ref=e201]:
+              - link "LinkedIn →" [ref=e202] [cursor=pointer]:
+                - /url: https://linkedin.com/in/santiago-vittor
+            - listitem [ref=e203]:
+              - link "Portfolio →" [ref=e204] [cursor=pointer]:
+                - /url: https://santiagovittor.com
+      - generic [ref=e205]:
+        - paragraph [ref=e206]: © 2026 Santiago Vittor. All rights reserved.
+        - paragraph [ref=e207]:
+          - text: Digital ads via
+          - link "dubanronald.com" [ref=e208] [cursor=pointer]:
+            - /url: https://dubanronald.com
+  - button "Open Next.js Dev Tools" [ref=e214] [cursor=pointer]:
+    - img [ref=e215]

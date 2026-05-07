@@ -1,0 +1,195 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Bebas Neue", sans-serif;
+  --font-body: "DM Mono", monospace;
+}
+
+:root {
+  --bg: #0A0A0A;
+  --surface: #111111;
+  --border: #222222;
+  --accent: #E8FF00;
+  --accent-2: #FF4D00;
+  --text: #F0EDE6;
+  --muted: #888888;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
+    background-color: var(--bg);
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    width: 100%;
+    overflow-x: hidden;
+  }
+}
+
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+  --spotlight-x: 50%;
+  --spotlight-y: 50%;
+}
+
+.spotlight-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--spotlight-x) var(--spotlight-y),
+    rgba(232, 255, 0, 0.07) 0%,
+    rgba(232, 255, 0, 0.03) 30%,
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.spotlight-card:hover::before {
+  opacity: 1;
+}
+
+/* ─── Effect 1: Rotating gradient border on project cards ─── */
+
+@property --border-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.project-card-wrapper {
+  position: relative;
+  padding: 1px;
+  background: var(--border);
+}
+
+.project-card-wrapper:hover {
+  background: conic-gradient(
+    from var(--border-angle),
+    var(--border) 0deg,
+    rgba(232, 255, 0, 0.35) 30deg,
+    var(--accent) 50deg,
+    rgba(232, 255, 0, 0.35) 70deg,
+    var(--border) 100deg,
+    var(--border) 360deg
+  );
+  animation: border-rotate 3s linear infinite;
+}
+
+@keyframes border-rotate {
+  to { --border-angle: 360deg; }
+}
+
+/* ─── Effect 2: Neon glow on accent text ─── */
+
+.stat-number {
+  text-shadow:
+    0 0 8px rgba(232, 255, 0, 0.7),
+    0 0 20px rgba(232, 255, 0, 0.35),
+    0 0 40px rgba(232, 255, 0, 0.15);
+  animation: accent-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes accent-pulse {
+  0%, 100% {
+    text-shadow:
+      0 0 8px rgba(232, 255, 0, 0.7),
+      0 0 20px rgba(232, 255, 0, 0.35),
+      0 0 40px rgba(232, 255, 0, 0.15);
+  }
+  50% {
+    text-shadow:
+      0 0 14px rgba(232, 255, 0, 0.95),
+      0 0 32px rgba(232, 255, 0, 0.55),
+      0 0 60px rgba(232, 255, 0, 0.25);
+  }
+}
+
+.service-cta {
+  text-shadow:
+    0 0 6px rgba(232, 255, 0, 0.5),
+    0 0 15px rgba(232, 255, 0, 0.2);
+  transition: text-shadow 0.2s ease;
+}
+
+.service-cta:hover {
+  text-shadow:
+    0 0 6px rgba(255, 77, 0, 0.5),
+    0 0 15px rgba(255, 77, 0, 0.2);
+}
+
+/* ─── About: marquee scrolling rows ─── */
+
+.marquee-container {
+  overflow: hidden;
+  width: 100%;
+}
+
+.marquee-track {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.marquee-left {
+  animation: marquee-left 24s linear infinite;
+}
+
+.marquee-right {
+  animation: marquee-right 30s linear infinite;
+}
+
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes marquee-right {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+@media (max-width: 768px) {
+  .marquee-left  { animation-duration: 32s; }
+  .marquee-right { animation-duration: 40s; }
+}
+
+/* ─── Reduced motion overrides ─── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  .project-card-wrapper:hover {
+    background: var(--accent);
+    animation: none !important;
+  }
+}

@@ -1,0 +1,31 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - link "SANTIAGO VITTOR" [ref=e4] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e5]:
+        - link "Services" [ref=e6] [cursor=pointer]:
+          - /url: "#services"
+        - link "Projects" [ref=e7] [cursor=pointer]:
+          - /url: "#projects"
+        - link "About" [ref=e8] [cursor=pointer]:
+          - /url: "#about"
+        - link "Contact" [ref=e9] [cursor=pointer]:
+          - /url: "#contact"
+        - link "Book a call" [ref=e10] [cursor=pointer]:
+          - /url: "#contact"
+  - main [ref=e11]:
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - paragraph [ref=e16]: Buenos Aires → Remote · Full-Stack & AI
+        - heading "I BUILD WEB & AI PRODUCTS" [level=1] [ref=e17]:
+          - text: I BUILD
+          - text: WEB & AI
+          - text: PRODUCTS
+        - paragraph [ref=e18]: I build web products and AI systems for international clients. Based in Buenos Aires, working remotely.
+        - generic [ref=e19]:
+          - link "Book a call" [ref=e20] [cursor=pointer]:
+            - /url: "#contact"
+          - link "See my work" [ref=e21] [cursor=pointer]:
+            - /url: "#projects"
+      - img [ref=e24]
