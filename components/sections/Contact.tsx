@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { SITE } from "@/lib/constants";
-import { submitContact } from "@/app/actions/contact";
 
 const schema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -38,6 +37,7 @@ export default function Contact() {
   const reduce = useReducedMotion();
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const honeypotRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -48,12 +48,25 @@ export default function Contact() {
 
   const onSubmit = async (data: FormValues) => {
     setServerError(null);
-    const result = await submitContact(data);
-    if (result.success) {
-      setSubmitted(true);
-      reset();
-    } else {
-      setServerError(result.error ?? "Something went wrong. Try again.");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...data,
+          website: honeypotRef.current?.value ?? "",
+        }),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+        reset();
+      } else if (res.status === 400) {
+        setServerError("Please check your inputs and try again.");
+      } else {
+        setServerError("Failed to send message. Please try again.");
+      }
+    } catch {
+      setServerError("Something went wrong. Try again.");
     }
   };
 
@@ -215,6 +228,23 @@ export default function Contact() {
                     </span>
                   )}
                 </div>
+
+                {/* Honeypot — hidden from real users, catches bots */}
+                <input
+                  ref={honeypotRef}
+                  type="text"
+                  name="website"
+                  autoComplete="off"
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    opacity: 0,
+                    pointerEvents: "none",
+                    width: 0,
+                    height: 0,
+                  }}
+                />
 
                 {serverError && (
                   <span
