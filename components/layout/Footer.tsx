@@ -1,7 +1,12 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import { NAV_LINKS, SOCIAL_LINKS, SITE } from "@/lib/constants";
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const pathname = usePathname();
+  const navHref = (href: string) => pathname.startsWith("/ar") ? "/" + href : href;
 
   return (
     <footer className="w-full bg-[var(--bg)]" style={{ borderTop: "1px solid var(--border)" }}>
@@ -31,7 +36,7 @@ export default function Footer() {
               {NAV_LINKS.map((link) => (
                 <li key={link.href}>
                   <a
-                    href={link.href}
+                    href={navHref(link.href)}
                     className="font-body text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
                   >
                     {link.label}

@@ -9,7 +9,11 @@ export const siteMetadata: Metadata = {
   description: SITE.description,
   metadataBase: new URL(SITE.url),
   alternates: {
-    canonical: "/",
+    canonical: SITE.url,
+    languages: {
+      "en": SITE.url,
+      "es-AR": `${SITE.url}/ar`,
+    },
   },
   openGraph: {
     type: "website",

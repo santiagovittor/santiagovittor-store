@@ -69,6 +69,41 @@
   opacity: 1;
 }
 
+/* ─── Animated border wrapper for pricing cards ─── */
+
+.project-card-animated {
+  position: relative;
+  padding: 1px;
+  background: var(--border);
+}
+
+.project-card-animated.featured {
+  background: var(--accent);
+}
+
+.project-card-animated:hover {
+  background: conic-gradient(
+    from var(--border-angle),
+    var(--border) 0deg,
+    rgba(232, 255, 0, 0.35) 30deg,
+    var(--accent) 50deg,
+    rgba(232, 255, 0, 0.35) 70deg,
+    var(--border) 100deg,
+    var(--border) 360deg
+  );
+  animation: border-rotate 3s linear infinite;
+}
+
+/* ─── Neon glow for price numbers ─── */
+
+.glow-accent-pulse {
+  text-shadow:
+    0 0 8px rgba(232, 255, 0, 0.7),
+    0 0 20px rgba(232, 255, 0, 0.35),
+    0 0 40px rgba(232, 255, 0, 0.15);
+  animation: accent-pulse 2.5s ease-in-out infinite;
+}
+
 /* ─── Effect 1: Rotating gradient border on project cards ─── */
 
 @property --border-angle {

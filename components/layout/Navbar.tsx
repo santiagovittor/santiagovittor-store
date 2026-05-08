@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { NAV_LINKS, SITE } from "@/lib/constants";
 import Button from "@/components/ui/Button";
@@ -8,6 +9,8 @@ import Button from "@/components/ui/Button";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const pathname = usePathname();
+  const navHref = (href: string) => pathname.startsWith("/ar") ? "/" + href : href;
 
   const close = () => setIsOpen(false);
 
@@ -26,7 +29,7 @@ export default function Navbar() {
             {NAV_LINKS.map((link) => (
               <a
                 key={link.href}
-                href={link.href}
+                href={navHref(link.href)}
                 className="font-body text-sm tracking-widest uppercase text-[var(--muted)] hover:text-[var(--text)] transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
               >
                 {link.label}
@@ -83,7 +86,7 @@ export default function Navbar() {
                   }}
                 >
                   <a
-                    href={link.href}
+                    href={navHref(link.href)}
                     onClick={close}
                     className="font-display text-6xl text-[var(--text)] hover:text-[var(--accent)] transition-colors duration-150 tracking-widest focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
                   >
