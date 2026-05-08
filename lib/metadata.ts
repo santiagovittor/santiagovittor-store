@@ -3,24 +3,24 @@ import { SITE } from "./constants";
 
 export const siteMetadata: Metadata = {
   title: {
-    default: `${SITE.name} |${SITE.tagline}`,
+    default: `${SITE.name} — ${SITE.tagline}`,
     template: `%s | ${SITE.name}`,
   },
   description: SITE.description,
   metadataBase: new URL(SITE.url),
   alternates: {
-    canonical: SITE.url,
+    canonical: "/",
   },
   openGraph: {
     type: "website",
     url: SITE.url,
-    title: `${SITE.name} |${SITE.tagline}`,
+    title: `${SITE.name} — ${SITE.tagline}`,
     description: SITE.description,
     siteName: SITE.name,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE.name} |${SITE.tagline}`,
+    title: `${SITE.name} — ${SITE.tagline}`,
     description: SITE.description,
     creator: "@santiagovittor",
   },
