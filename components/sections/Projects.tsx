@@ -166,7 +166,7 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className="w-full bg-[var(--bg)] relative py-16 md:py-24 lg:py-32"
+      className="w-full relative py-16 md:py-24 lg:py-32"
       style={{ borderTop: "1px solid var(--border)" }}
     >
       <div className="mx-auto w-full max-w-7xl px-6">

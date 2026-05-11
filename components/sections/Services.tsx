@@ -130,7 +130,7 @@ export default function Services() {
   const reduce = useReducedMotion();
 
   return (
-    <section id="services" className="w-full bg-[var(--bg)] relative py-16 md:py-24 lg:py-32">
+    <section id="services" className="w-full relative py-16 md:py-24 lg:py-32">
       <div className="mx-auto w-full max-w-7xl px-6">
         {/* Section header */}
         <motion.div

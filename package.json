@@ -9,13 +9,16 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@flodlc/nebula": "^1.0.56",
     "@hookform/resolvers": "^5.2.2",
+    "@types/three": "^0.184.1",
     "motion": "^12.38.0",
     "next": "latest",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.75.0",
     "resend": "^6.12.3",
+    "three": "^0.184.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {

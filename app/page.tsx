@@ -4,6 +4,8 @@ import SocialProof from "@/components/sections/SocialProof";
 import Projects from "@/components/sections/Projects";
 import About from "@/components/sections/About";
 import Contact from "@/components/sections/Contact";
+import Footer from "@/components/layout/Footer";
+import CosmicBackground from "@/components/CosmicBackground";
 import { SITE, SOCIAL_LINKS } from "@/lib/constants";
 
 const jsonLd = {
@@ -39,13 +41,15 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <main className="w-full">
+      <CosmicBackground />
+      <main className="w-full" style={{ position: "relative", zIndex: 1 }}>
         <Hero />
         <Services />
         <SocialProof />
         <Projects />
         <About />
         <Contact />
+        <Footer />
       </main>
     </>
   );

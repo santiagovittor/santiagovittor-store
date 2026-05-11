@@ -3,7 +3,6 @@
 import { motion, useReducedMotion } from "motion/react";
 import { SITE } from "@/lib/constants";
 import Button from "@/components/ui/Button";
-import StarField from "@/components/StarField";
 
 function fadeUp(delay: number, reduce: boolean | null) {
   return {
@@ -21,8 +20,7 @@ export default function Hero() {
   const reduce = useReducedMotion();
 
   return (
-    <section className="w-full bg-[var(--bg)] relative overflow-hidden flex min-h-screen items-center pt-16">
-      <StarField />
+    <section className="w-full relative overflow-hidden flex min-h-screen items-center pt-16">
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 md:px-6 py-16 md:py-24">
         <div className="grid grid-cols-1 gap-16 md:grid-cols-[3fr_2fr] md:gap-12 md:items-center">
           {/* Left column */}

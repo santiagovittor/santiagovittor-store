@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
-import StarField from "@/components/StarField";
+import CosmicBackground from "@/components/CosmicBackground";
+import Footer from "@/components/layout/Footer";
 import Button from "@/components/ui/Button";
 import { useSpotlight } from "@/hooks/useSpotlight";
 import { SITE } from "@/lib/constants";
@@ -38,8 +39,7 @@ function itemV(reduce: boolean | null): Variants {
 function ArHero() {
   const reduce = useReducedMotion();
   return (
-    <section className="w-full bg-[var(--bg)] relative overflow-hidden flex min-h-screen items-center pt-16">
-      <StarField />
+    <section id="hero" className="w-full relative overflow-hidden flex min-h-screen items-center pt-16">
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 md:px-6 py-16 md:py-24">
         <div className="max-w-3xl flex flex-col gap-8">
           <motion.p
@@ -148,7 +148,7 @@ const SOLUTION_BULLETS = [
 function ArSolution() {
   const reduce = useReducedMotion();
   return (
-    <section className="bg-[var(--surface)] border-y border-[var(--border)]">
+    <section className="section-frosted border-y border-[var(--border)]">
       <div className="mx-auto max-w-7xl px-4 md:px-6 py-24 md:py-32">
         <motion.div
           variants={containerVariants}
@@ -361,7 +361,7 @@ const STEPS = [
 function ArProcess() {
   const reduce = useReducedMotion();
   return (
-    <section className="bg-[var(--surface)] border-y border-[var(--border)]">
+    <section className="section-frosted border-y border-[var(--border)]">
       <div className="mx-auto max-w-7xl px-4 md:px-6 py-24 md:py-32">
         <motion.div
           variants={containerVariants}
@@ -499,7 +499,7 @@ function ArSocialProof() {
 function ArAbout() {
   const reduce = useReducedMotion();
   return (
-    <section className="bg-[var(--surface)] border-y border-[var(--border)]">
+    <section className="section-frosted border-y border-[var(--border)]">
       <div className="mx-auto max-w-7xl px-4 md:px-6 py-24 md:py-32">
         <motion.div
           variants={containerVariants}
@@ -596,7 +596,7 @@ function ArOtherServices() {
 function ArCtaFinal() {
   const reduce = useReducedMotion();
   return (
-    <section id="final-cta" className="bg-[var(--surface)] border-t border-[var(--border)]">
+    <section id="final-cta" className="section-frosted border-t border-[var(--border)]">
       <div className="mx-auto max-w-7xl px-4 md:px-6 py-24 md:py-32">
         <motion.div
           variants={containerVariants}
@@ -635,23 +635,32 @@ function ArCtaFinal() {
 // ─── STICKY WHATSAPP ─────────────────────────────────────────────────────────
 
 function StickyWhatsApp() {
-  const [visible, setVisible] = useState(true);
-  const observedRef = useRef<Element | null>(null);
+  const [heroPast, setHeroPast] = useState(false);
+  const [ctaVisible, setCtaVisible] = useState(false);
 
   useEffect(() => {
-    const el = document.getElementById("final-cta");
-    if (!el) return;
-    observedRef.current = el;
+    const hero = document.getElementById("hero");
+    const cta = document.getElementById("final-cta");
+    if (!hero || !cta) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setVisible(!entry.isIntersecting),
+    const heroObs = new IntersectionObserver(
+      ([entry]) => setHeroPast(!entry.isIntersecting),
+      { threshold: 0 }
+    );
+    const ctaObs = new IntersectionObserver(
+      ([entry]) => setCtaVisible(entry.isIntersecting),
       { threshold: 0.15 }
     );
-    observer.observe(el);
-    return () => observer.disconnect();
+
+    heroObs.observe(hero);
+    ctaObs.observe(cta);
+    return () => {
+      heroObs.disconnect();
+      ctaObs.disconnect();
+    };
   }, []);
 
-  if (!visible) return null;
+  if (!heroPast || ctaVisible) return null;
 
   return (
     <a
@@ -690,17 +699,21 @@ function StickyWhatsApp() {
 
 export default function ArPage() {
   return (
-    <main>
-      <ArHero />
-      <ArProblem />
-      <ArSolution />
-      <ArPricing />
-      <ArProcess />
-      <ArSocialProof />
-      <ArAbout />
-      <ArOtherServices />
-      <ArCtaFinal />
-      <StickyWhatsApp />
-    </main>
+    <>
+      <CosmicBackground />
+      <main style={{ position: "relative", zIndex: 1 }}>
+        <ArHero />
+        <ArProblem />
+        <ArSolution />
+        <ArPricing />
+        <ArProcess />
+        <ArSocialProof />
+        <ArAbout />
+        <ArOtherServices />
+        <ArCtaFinal />
+        <Footer />
+        <StickyWhatsApp />
+      </main>
+    </>
   );
 }

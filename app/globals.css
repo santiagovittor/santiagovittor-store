@@ -6,13 +6,13 @@
 }
 
 :root {
-  --bg: #0A0A0A;
+  --bg: #050505;
   --surface: #111111;
   --border: #222222;
   --accent: #E8FF00;
   --accent-2: #FF4D00;
   --text: #F0EDE6;
-  --muted: #888888;
+  --muted: #AAAAAA;
 }
 
 @layer base {
@@ -35,11 +35,32 @@
     background-color: var(--bg);
     color: var(--text);
     font-family: var(--font-body);
+    font-size: 0.9375rem;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     width: 100%;
     overflow-x: hidden;
+    overflow-y: auto;
   }
+
+  .nebula-canvas,
+  [class*="nebula"] canvas,
+  #nebula-canvas {
+    display: block;
+    height: 100% !important;
+    max-height: 100vh !important;
+  }
+
+  p, li {
+    font-weight: 400;
+    line-height: 1.7;
+  }
+}
+
+.section-frosted {
+  background: rgba(10, 10, 10, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .spotlight-card {

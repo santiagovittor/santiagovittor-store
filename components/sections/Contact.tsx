@@ -73,7 +73,7 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="w-full bg-[var(--bg)] relative py-16 md:py-24 lg:py-32"
+      className="w-full relative pt-16 pb-8 md:pt-24 md:pb-12 lg:pt-32 lg:pb-16"
       style={{ borderTop: "1px solid var(--border)" }}
     >
       <div className="mx-auto w-full max-w-7xl px-6">
