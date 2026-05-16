@@ -9,9 +9,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.74",
+    "@ai-sdk/react": "^3.0.186",
     "@flodlc/nebula": "^1.0.56",
     "@hookform/resolvers": "^5.2.2",
     "@types/three": "^0.184.1",
+    "ai": "^6.0.183",
     "motion": "^12.38.0",
     "next": "latest",
     "react": "^19.0.0",
