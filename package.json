@@ -11,6 +11,7 @@
   "dependencies": {
     "@ai-sdk/google": "^3.0.74",
     "@ai-sdk/react": "^3.0.186",
+    "@calcom/embed-react": "^1.5.3",
     "@flodlc/nebula": "^1.0.56",
     "@hookform/resolvers": "^5.2.2",
     "@types/three": "^0.184.1",

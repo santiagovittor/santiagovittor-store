@@ -6,6 +6,7 @@ import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { SITE } from "@/lib/constants";
+import Cal, { getCalApi } from "@calcom/embed-react";
 
 // ── helpers ─────────────────────────────────────────────────────────────────
 
@@ -108,6 +109,30 @@ function WordReveal({ text, reduced }: { text: string; reduced: boolean }) {
         ),
       )}
     </>
+  );
+}
+
+function CalEmbed() {
+  useEffect(() => {
+    (async () => {
+      const cal = await getCalApi();
+      cal("ui", { theme: "dark" });
+    })();
+  }, []);
+
+  return (
+    <Cal
+      calLink="santiago-vittor-4ozbwu/30min"
+      config={{
+        theme: "dark",
+        layout: "column_view",
+      }}
+      style={{
+        width: "100%",
+        height: "600px",
+        border: "1px solid var(--accent)",
+      }}
+    />
   );
 }
 
@@ -515,10 +540,11 @@ export default function ChatAssistant() {
 
                 {/* Message turns */}
                 {messages.map((msg) => {
-                  const text = extractText(
-                    msg.parts as LoosePart[],
+                  const text = extractText(msg.parts as LoosePart[]);
+                  const bookingPart = (msg.parts as LoosePart[]).find(
+                    (p) => p.type === "tool-request_booking",
                   );
-                  if (!text) return null;
+                  if (!text && !bookingPart) return null;
 
                   if (msg.role === "assistant") {
                     return (
@@ -529,15 +555,52 @@ export default function ChatAssistant() {
                         >
                           ▸
                         </span>
-                        <span
+                        <div
                           style={{
-                            color: "var(--text)",
-                            fontFamily: "var(--font-body)",
-                            lineHeight: 1.7,
+                            flex: 1,
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "12px",
                           }}
                         >
-                          <WordReveal text={text} reduced={prefersReduced} />
-                        </span>
+                          {text && (
+                            <span
+                              style={{
+                                color: "var(--text)",
+                                fontFamily: "var(--font-body)",
+                                lineHeight: 1.7,
+                              }}
+                            >
+                              <WordReveal text={text} reduced={prefersReduced} />
+                            </span>
+                          )}
+                          {bookingPart &&
+                            (bookingPart.state === "output-error" ? (
+                              <div
+                                style={{
+                                  fontFamily: "var(--font-body)",
+                                  color: "var(--text)",
+                                  lineHeight: 1.7,
+                                }}
+                              >
+                                Couldn&apos;t load the calendar.{" "}
+                                <a
+                                  href={SITE.whatsapp}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{
+                                    color: "var(--accent)",
+                                    textDecoration: "underline",
+                                    textUnderlineOffset: "3px",
+                                  }}
+                                >
+                                  → WhatsApp
+                                </a>
+                              </div>
+                            ) : (
+                              <CalEmbed />
+                            ))}
+                        </div>
                       </div>
                     );
                   }
