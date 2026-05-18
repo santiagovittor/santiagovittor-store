@@ -6,7 +6,6 @@ import About from "@/components/sections/About";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/layout/Footer";
 import CosmicBackground from "@/components/CosmicBackground";
-import ChatAssistant from "@/components/ChatAssistant";
 import { SITE, SOCIAL_LINKS } from "@/lib/constants";
 
 const jsonLd = {
@@ -52,7 +51,6 @@ export default function Home() {
         <Contact />
         <Footer />
       </main>
-      <ChatAssistant />
     </>
   );
 }

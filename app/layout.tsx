@@ -3,6 +3,7 @@ import { Bebas_Neue, DM_Mono } from "next/font/google";
 import "./globals.css";
 import { siteMetadata } from "@/lib/metadata";
 import Navbar from "@/components/layout/Navbar";
+import ChatAssistant from "@/components/ChatAssistant";
 
 const bebasNeue = Bebas_Neue({
   weight: "400",
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body>
         <Navbar />
         {children}
+        <ChatAssistant />
       </body>
     </html>
   );

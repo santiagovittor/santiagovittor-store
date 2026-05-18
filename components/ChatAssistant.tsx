@@ -121,18 +121,55 @@ function CalEmbed() {
   }, []);
 
   return (
-    <Cal
-      calLink="santiago-vittor-4ozbwu/30min"
-      config={{
-        theme: "dark",
-        layout: "column_view",
-      }}
+    <div
       style={{
-        width: "100%",
-        height: "600px",
+        height: "520px",
+        overflowY: "auto",
         border: "1px solid var(--accent)",
+        position: "relative",
+        flexShrink: 0,
       }}
-    />
+    >
+      <Cal
+        calLink="santiago-vittor-4ozbwu/30min"
+        config={{ theme: "dark", layout: "column_view" }}
+        style={{ width: "100%", display: "block" }}
+      />
+    </div>
+  );
+}
+
+function ThinkingIndicator({ reduced }: { reduced: boolean }) {
+  return (
+    <div style={{ display: "flex", gap: "6px" }}>
+      <span aria-hidden="true" style={{ color: "var(--accent)", flexShrink: 0 }}>
+        ▸
+      </span>
+      <div
+        aria-label="Thinking"
+        style={{ display: "flex", gap: "5px", alignItems: "center", padding: "4px 0" }}
+      >
+        {[0, 1, 2].map((i) => (
+          <motion.span
+            key={i}
+            style={{
+              color: "var(--muted)",
+              fontFamily: "var(--font-body)",
+              fontSize: "1rem",
+              lineHeight: 1,
+            }}
+            animate={reduced ? { opacity: 0.6 } : { opacity: [0.3, 1, 0.3] }}
+            transition={
+              reduced
+                ? {}
+                : { duration: 1.4, repeat: Infinity, delay: i * 0.2, ease: "easeInOut" }
+            }
+          >
+            •
+          </motion.span>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -631,6 +668,11 @@ export default function ChatAssistant() {
                     </div>
                   );
                 })}
+
+                {/* Thinking indicator */}
+                {status === "submitted" && (
+                  <ThinkingIndicator reduced={prefersReduced} />
+                )}
 
                 {/* Error */}
                 {error && (
