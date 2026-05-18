@@ -13,11 +13,14 @@ import type { UIMessage } from "ai";
 import { google } from "@ai-sdk/google";
 import { z } from "zod";
 import { createHash } from "crypto";
+import { Resend } from "resend";
 import {
   buildSystemPrompt,
   detectLanguage,
   INJECTION_PATTERNS,
 } from "@/lib/gemini";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const UIMessagePartSchema = z
   .object({ type: z.string(), text: z.string().optional() })
@@ -130,16 +133,30 @@ export async function POST(req: NextRequest) {
       }),
       submit_contact: tool({
         description:
-          "Collect the user's contact details when they want Santiago to follow up by email.",
+          "User wants Santiago to follow up by email. Call this when user says: 'leave my email', 'have him email me', 'follow up by email', 'dejame el mail', 'que me escriba', or any email follow-up request. Collect name and email first, then call immediately.",
         inputSchema: z.object({
           name: z.string().min(1),
           email: z.string().email(),
           message: z.string().min(1).max(1000),
         }),
-        execute: async (input) => ({ status: "contact_received", ...input }),
+        execute: async (input) => {
+          const { name, email, message } = input;
+          try {
+            await resend.emails.send({
+              from: "Contact Form <onboarding@resend.dev>",
+              to: "svittordev@gmail.com",
+              subject: `New chat contact: ${name}`,
+              text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+            });
+            return { status: "contact_received", email };
+          } catch {
+            return { status: "contact_error" };
+          }
+        },
       }),
       request_whatsapp_handoff: tool({
-        description: "User wants to continue on WhatsApp.",
+        description:
+          "User wants to continue on WhatsApp. Call this when user says: 'WhatsApp', 'text me', 'message me', 'mensajeáme', 'por WhatsApp', or any async messaging request.",
         inputSchema: z.object({}),
         execute: async () => ({ status: "whatsapp_requested" }),
       }),

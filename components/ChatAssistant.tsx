@@ -139,6 +139,101 @@ function CalEmbed() {
   );
 }
 
+function ContactConfirmCard({
+  email,
+  isError,
+  lang,
+}: {
+  email?: string;
+  isError: boolean;
+  lang: "en" | "es";
+}) {
+  if (isError) {
+    return (
+      <div style={{ border: "1px solid var(--accent)", padding: "12px 16px" }}>
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            color: "var(--text)",
+            lineHeight: 1.7,
+          }}
+        >
+          {lang === "es" ? "No se pudo enviar. " : "Couldn't send. "}
+          <a
+            href={SITE.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "var(--accent)",
+              textDecoration: "underline",
+              textUnderlineOffset: "3px",
+            }}
+          >
+            → WhatsApp
+          </a>
+        </span>
+      </div>
+    );
+  }
+  return (
+    <div style={{ border: "1px solid var(--accent)", padding: "12px 16px" }}>
+      <div
+        style={{
+          fontFamily: "var(--font-body)",
+          color: "var(--accent)",
+          lineHeight: 1.5,
+          marginBottom: "4px",
+        }}
+      >
+        {lang === "es" ? "✓ Le llegó a Santiago" : "✓ Sent to Santiago"}
+      </div>
+      {email && (
+        <div
+          style={{
+            fontFamily: "var(--font-body)",
+            color: "var(--muted)",
+            fontSize: "0.875rem",
+            lineHeight: 1.5,
+          }}
+        >
+          {lang === "es" ? `Te responde a ${email}` : `He'll follow up at ${email}`}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function WhatsAppHandoffCard({ lang }: { lang: "en" | "es" }) {
+  return (
+    <a
+      href={SITE.whatsapp}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        display: "inline-block",
+        width: "fit-content",
+        border: "1px solid var(--accent)",
+        padding: "12px 16px",
+        color: "var(--accent)",
+        fontFamily: "var(--font-body)",
+        fontSize: "0.9375rem",
+        lineHeight: 1.5,
+        textDecoration: "none",
+        transition: "background 0.15s",
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLAnchorElement).style.background =
+          "color-mix(in srgb, var(--accent) 8%, transparent)";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
+      }}
+    >
+      {lang === "es" ? "→ Seguimos por WhatsApp" : "→ Continue on WhatsApp"}
+    </a>
+  );
+}
+
 function ThinkingIndicator({ reduced }: { reduced: boolean }) {
   return (
     <div style={{ display: "flex", gap: "6px" }}>
@@ -581,7 +676,13 @@ export default function ChatAssistant() {
                   const bookingPart = (msg.parts as LoosePart[]).find(
                     (p) => p.type === "tool-request_booking",
                   );
-                  if (!text && !bookingPart) return null;
+                  const contactPart = (msg.parts as LoosePart[]).find(
+                    (p) => p.type === "tool-submit_contact",
+                  );
+                  const whatsappPart = (msg.parts as LoosePart[]).find(
+                    (p) => p.type === "tool-request_whatsapp_handoff",
+                  );
+                  if (!text && !bookingPart && !contactPart && !whatsappPart) return null;
 
                   if (msg.role === "assistant") {
                     return (
@@ -637,6 +738,26 @@ export default function ChatAssistant() {
                             ) : (
                               <CalEmbed />
                             ))}
+                          {contactPart &&
+                            (contactPart.state === "output-available" ||
+                              contactPart.state === "output-error") && (
+                              <ContactConfirmCard
+                                email={
+                                  (contactPart.output as Record<string, unknown>)
+                                    ?.email as string | undefined
+                                }
+                                isError={
+                                  contactPart.state === "output-error" ||
+                                  (contactPart.output as Record<string, unknown>)
+                                    ?.status === "contact_error"
+                                }
+                                lang={lang}
+                              />
+                            )}
+                          {whatsappPart &&
+                            whatsappPart.state === "output-available" && (
+                              <WhatsAppHandoffCard lang={lang} />
+                            )}
                         </div>
                       </div>
                     );
