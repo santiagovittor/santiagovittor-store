@@ -12,14 +12,9 @@ import Cal, { getCalApi } from "@calcom/embed-react";
 
 type LoosePart = { type: string; [k: string]: unknown };
 
-const RAY_ENDPOINTS = [
-  { x2: 26,  y2: 14     }, // 0°
-  { x2: 20,  y2: 24.392 }, // 60°
-  { x2: 8,   y2: 24.392 }, // 120°
-  { x2: 2,   y2: 14     }, // 180°
-  { x2: 8,   y2: 3.608  }, // 240°
-  { x2: 20,  y2: 3.608  }, // 300°
-];
+
+const GLITCH_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%&*";
+const GLITCH_TOTAL_FRAMES = 26;
 
 function extractText(parts: LoosePart[]): string {
   return parts
@@ -34,28 +29,18 @@ function extractText(parts: LoosePart[]): string {
 // ── sub-components ───────────────────────────────────────────────────────────
 
 function StarSVG() {
-  const c = 14;
-  const r = 12;
   return (
     <svg
       width="28"
-      height="28"
-      viewBox="0 0 28 28"
+      height="38"
+      viewBox="0 0 28 38"
       aria-hidden="true"
       className="star-svg"
     >
-      {RAY_ENDPOINTS.map(({ x2, y2 }, i) => (
-        <line
-          key={i}
-          x1={c}
-          y1={c}
-          x2={x2}
-          y2={y2}
-          stroke="var(--accent)"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-      ))}
+      <path
+        d="M14 0 L18 14 L28 19 L18 24 L14 38 L10 24 L0 19 L10 14 Z"
+        fill="var(--accent)"
+      />
     </svg>
   );
 }
@@ -285,6 +270,16 @@ export default function ChatAssistant() {
 
   const prefersReduced = useReducedMotion() ?? false;
 
+  // Glitch decode label
+  const [glitchPhase, setGlitchPhase] = useState<"idle" | "scrambling" | "resolved" | "done">("idle");
+  const [displayText, setDisplayText] = useState("");
+  const [isHovered, setIsHovered] = useState(false);
+  const [isFinePointer, setIsFinePointer] = useState(false);
+  const glitchIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const openRef = useRef(false);
+
+  const FINAL_TEXT = lang === "es" ? "MI ASISTENTE 24/7" : "ASK MY AI";
+
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/chat",
@@ -382,6 +377,69 @@ export default function ChatAssistant() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
+  // Keep openRef in sync for use inside timer closures
+  useEffect(() => {
+    openRef.current = open;
+  }, [open]);
+
+  // Fine pointer detection (client-only)
+  useEffect(() => {
+    setIsFinePointer(window.matchMedia("(pointer: fine)").matches);
+  }, []);
+
+  // Dismiss glitch label immediately when chat opens
+  useEffect(() => {
+    if (!open) return;
+    if (glitchIntervalRef.current) {
+      clearInterval(glitchIntervalRef.current);
+      glitchIntervalRef.current = null;
+    }
+    setGlitchPhase("done");
+  }, [open]);
+
+  // Auto-start glitch 2s after mount (guards against chat already open)
+  useEffect(() => {
+    const t = setTimeout(() => {
+      if (!openRef.current) setGlitchPhase("scrambling");
+    }, 2000);
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Run scramble interval when phase = scrambling
+  useEffect(() => {
+    if (glitchPhase !== "scrambling") return;
+    let frame = 0;
+    const final = FINAL_TEXT;
+    glitchIntervalRef.current = setInterval(() => {
+      frame++;
+      const resolvedCount = Math.round((frame / GLITCH_TOTAL_FRAMES) * final.length);
+      const tail = Array.from({ length: final.length - resolvedCount })
+        .map(() => GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)])
+        .join("");
+      setDisplayText(final.slice(0, resolvedCount) + tail);
+      if (frame >= GLITCH_TOTAL_FRAMES) {
+        clearInterval(glitchIntervalRef.current!);
+        glitchIntervalRef.current = null;
+        setDisplayText(final);
+        setGlitchPhase("resolved");
+      }
+    }, 55);
+    return () => {
+      if (glitchIntervalRef.current) {
+        clearInterval(glitchIntervalRef.current);
+        glitchIntervalRef.current = null;
+      }
+    };
+  }, [glitchPhase, FINAL_TEXT]);
+
+  // Hold resolved text for 3s then fade out
+  useEffect(() => {
+    if (glitchPhase !== "resolved") return;
+    const t = setTimeout(() => setGlitchPhase("done"), 3000);
+    return () => clearTimeout(t);
+  }, [glitchPhase]);
+
   // ── handlers ───────────────────────────────────────────────────────────────
 
   const isStreaming = status === "streaming" || status === "submitted";
@@ -425,6 +483,12 @@ export default function ChatAssistant() {
   const clipOrigin = "circle(0% at calc(100% - 48px) calc(100% - 48px))";
   const clipFull = "circle(150% at calc(100% - 48px) calc(100% - 48px))";
 
+  // ── glitch label derived state ─────────────────────────────────────────────
+
+  const labelVisible =
+    glitchPhase === "scrambling" || glitchPhase === "resolved" || isHovered;
+  const showGlitch = glitchPhase === "scrambling" && !isHovered && !prefersReduced;
+
   // ── render ─────────────────────────────────────────────────────────────────
 
   return (
@@ -445,6 +509,12 @@ export default function ChatAssistant() {
           0%, 100% { opacity: 1; }
           50%       { opacity: 0.3; }
         }
+        @keyframes glitch-shift {
+          0%   { transform: translateX(0px); }
+          25%  { transform: translateX(-1px); }
+          75%  { transform: translateX(1px); }
+          100% { transform: translateX(0px); }
+        }
         .star-trigger { transition: transform 0.1s ease, opacity 0.15s ease; }
         .star-trigger:focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
         .star-svg { animation: star-rotate 12s linear infinite, star-filter 7s ease-in-out infinite; }
@@ -455,20 +525,16 @@ export default function ChatAssistant() {
         .chip-btn { transition: border-color 0.15s, color 0.15s; }
         .chip-btn:hover, .chip-btn:focus-visible { border-color: var(--accent) !important; color: var(--accent) !important; }
         .chip-btn:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
+        .glitch-active { animation: glitch-shift 70ms ease-in-out infinite; }
         @media (prefers-reduced-motion: reduce) {
-          .star-svg  { animation: star-filter 4s ease-in-out infinite !important; }
+          .star-svg   { animation: star-filter 4s ease-in-out infinite !important; }
           .online-dot { animation: none !important; }
+          .glitch-active { animation: none !important; }
         }
       `}</style>
 
-      {/* ── Star trigger ── */}
-      <button
-        ref={triggerRef}
-        onClick={() => setOpen((prev) => !prev)}
-        aria-label={open ? "Close chat" : S.ariaOpen}
-        aria-expanded={open}
-        aria-haspopup="dialog"
-        className="star-trigger"
+      {/* ── Star trigger + Glitch Decode Label ── */}
+      <div
         style={{
           position: "fixed",
           bottom: "32px",
@@ -476,18 +542,67 @@ export default function ChatAssistant() {
           zIndex: 50,
           width: "44px",
           height: "44px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          padding: 0,
-          opacity: open ? 0.3 : 1,
         }}
+        onMouseEnter={() => {
+          if (isFinePointer) setIsHovered(true);
+        }}
+        onMouseLeave={() => setIsHovered(false)}
       >
-        <StarSVG />
-      </button>
+        {/* Glitch label — outer div owns positioning, inner span owns glitch transform */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            right: "calc(100% + 10px)",
+            top: "50%",
+            transform: "translateY(-50%)",
+            pointerEvents: "none",
+            userSelect: "none",
+            opacity: labelVisible ? 1 : 0,
+            transition: "opacity 0.2s ease",
+          }}
+        >
+          <span
+            className={showGlitch ? "glitch-active" : ""}
+            style={{
+              display: "block",
+              fontFamily: "var(--font-display)",
+              fontSize: "13px",
+              letterSpacing: "0.18em",
+              color: "var(--accent)",
+              whiteSpace: "nowrap",
+              textShadow: showGlitch ? "2px 0 #ff0040, -2px 0 #00e5ff" : "none",
+            }}
+          >
+            {isHovered ? FINAL_TEXT : displayText}
+          </span>
+        </div>
+
+        <button
+          ref={triggerRef}
+          onClick={() => setOpen((prev) => !prev)}
+          aria-label={open ? "Close chat" : S.ariaOpen}
+          aria-expanded={open}
+          aria-haspopup="dialog"
+          className="star-trigger"
+          style={{
+            position: "relative",
+            width: "44px",
+            height: "44px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "none",
+            border: "none",
+            outline: "none",
+            cursor: "pointer",
+            padding: 0,
+            opacity: open ? 0.3 : 1,
+          }}
+        >
+          <StarSVG />
+        </button>
+      </div>
 
       {/* ── Chat panel ── */}
       <AnimatePresence>

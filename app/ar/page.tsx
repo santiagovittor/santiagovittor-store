@@ -112,7 +112,7 @@ function ArProblem() {
             Son las 21. Alguien en tu barrio quiere comer algo distinto, necesita
             un turno para el lunes, o busca una veterinaria que atienda guardia.
             Escribe en Google el nombre de tu local, o escribe &ldquo;peluquería
-            canina en [barrio]&rdquo;.
+            canina en Nuñez&rdquo;.
           </motion.p>
           <motion.p variants={itemV(reduce)}>
             Si no tenés web, no aparecés. Aparece el local de enfrente, que sí
@@ -122,12 +122,11 @@ function ArProblem() {
             Esa persona no sabe quién es mejor. Elige al que tiene más pinta de
             estar abierto la semana que viene, al que parece más establecido.
             Una web no les dice que sos el mejor;{" "}
-            <span className="text-[var(--text)]">les dice que sos real.</span>
+            <span className="text-[var(--text)]">les dice que existis.</span>
           </motion.p>
           <motion.p variants={itemV(reduce)}>
             Instagram no reemplaza eso. Google no muestra tus posts cuando alguien
-            busca por rubro y zona. Si no tenés sitio propio, fuera de la app no
-            existís.
+            busca por rubro y zona. Si no tenés sitio propio, fuera de la app nadie puede encontrarte.
           </motion.p>
         </div>
       </motion.div>
@@ -475,19 +474,6 @@ function ArSocialProof() {
               gente. Un perfil de Instagram no es suficiente.
             </motion.p>
           </div>
-
-          {/* Testimonial placeholder */}
-          <motion.blockquote
-            variants={itemV(reduce)}
-            className="border border-dashed border-[var(--accent)] p-8 flex flex-col gap-4"
-          >
-            <p className="font-body text-sm text-[var(--muted)] italic leading-loose">
-              &ldquo;[Primer testimonio de cliente argentino — próximamente]&rdquo;
-            </p>
-            <footer className="font-body text-xs tracking-[0.15em] uppercase text-[var(--accent)]">
-              — En espera
-            </footer>
-          </motion.blockquote>
         </motion.div>
       </motion.div>
     </section>

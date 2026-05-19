@@ -120,7 +120,8 @@ Confirmed in `.env.local` (names only — do not commit values):
 - `GOOGLE_GENERATIVE_AI_API_KEY` — consumed implicitly by `@ai-sdk/google` `google()` call; `lib/gemini.ts` has no direct `process.env` references
 
 ### Git commit
-_Staged after Phase 5 completes._
+Hash: `047b155` (not pushed — push manually after Resend dashboard verification)
+Files: `lib/gemini.ts`, `app/api/chat/route.ts`, `package.json`, `package-lock.json`, `SESSION-6-NOTES.md`, `SESSION-7-NOTES.md`, `scripts/test-chat.mjs`, `scripts/mobile-qa.mjs`
 
 ---
 
