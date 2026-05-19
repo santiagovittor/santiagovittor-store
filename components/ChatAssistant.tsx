@@ -275,10 +275,16 @@ export default function ChatAssistant() {
   const [displayText, setDisplayText] = useState("");
   const [isHovered, setIsHovered] = useState(false);
   const [isFinePointer, setIsFinePointer] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const glitchIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const openRef = useRef(false);
 
-  const FINAL_TEXT = lang === "es" ? "MI ASISTENTE 24/7" : "ASK MY AI";
+  const FINAL_TEXT =
+    lang === "es"
+      ? isMobile
+        ? "ASISTENTE 24/7"
+        : "MI ASISTENTE 24/7"
+      : "ASK MY AI";
 
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
@@ -385,6 +391,11 @@ export default function ChatAssistant() {
   // Fine pointer detection (client-only)
   useEffect(() => {
     setIsFinePointer(window.matchMedia("(pointer: fine)").matches);
+  }, []);
+
+  // Mobile detection for label copy + star clearance (client-only)
+  useEffect(() => {
+    setIsMobile(window.matchMedia("(max-width: 480px)").matches);
   }, []);
 
   // Dismiss glitch label immediately when chat opens
@@ -537,7 +548,7 @@ export default function ChatAssistant() {
       <div
         style={{
           position: "fixed",
-          bottom: "32px",
+          bottom: isMobile ? "72px" : "32px",
           right: "32px",
           zIndex: 50,
           width: "44px",
