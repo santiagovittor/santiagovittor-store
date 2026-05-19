@@ -40,8 +40,8 @@ const bodySchema = z.object({
 });
 
 const REFUSAL = {
-  en: "I can only chat about Santiago's work. What are you building?",
-  es: "Solo puedo hablar del trabajo de Santiago. ¿Qué estás armando?",
+  en: "I only talk about my work. What are you building?",
+  es: "Solo hablo de mi trabajo. ¿Qué estás armando?",
 };
 
 export async function POST(req: NextRequest) {
