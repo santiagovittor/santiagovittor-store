@@ -162,9 +162,6 @@ export async function POST(req: NextRequest) {
       }),
     },
     stopWhen: stepCountIs(5),
-    providerOptions: {
-      google: { thinkingConfig: { thinkingBudget: 0 } },
-    },
   });
 
   return result.toUIMessageStreamResponse();

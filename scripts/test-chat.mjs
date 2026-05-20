@@ -6,6 +6,8 @@
 const BASE = "http://localhost:3000/api/chat";
 
 const VECTORS = [
+  // Session 12 — cold-start tool routing
+  { label: "V-BOOKING-1", text: "book a meeting" },
   // Phase 4 — Consent-forgery
   {
     label: "I-M-6",
