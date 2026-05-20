@@ -121,7 +121,7 @@ export async function POST(req: NextRequest) {
   );
 
   const result = streamText({
-    model: google("gemini-2.5-flash"),
+    model: google("gemini-3.5-flash"),
     system: buildSystemPrompt(lang),
     messages: modelMessages,
     tools: {
@@ -162,6 +162,9 @@ export async function POST(req: NextRequest) {
       }),
     },
     stopWhen: stepCountIs(5),
+    providerOptions: {
+      google: { thinkingConfig: { thinkingBudget: 0 } },
+    },
   });
 
   return result.toUIMessageStreamResponse();
