@@ -120,10 +120,39 @@ export async function POST(req: NextRequest) {
     recentMessages as unknown as Array<Omit<UIMessage, "id">>
   );
 
+  // Drop orphaned tool-call/result pairs from the head of the window.
+  // Gemini rejects when first turn is an assistant tool-call with no preceding user turn.
+  let windowStart = 0;
+  while (windowStart < modelMessages.length) {
+    const m = modelMessages[windowStart];
+    if (m.role === "user") break;
+    if (m.role === "assistant") {
+      const parts = Array.isArray(m.content) ? m.content : [];
+      const hasToolCall = parts.some(
+        (p) =>
+          typeof p === "object" &&
+          p !== null &&
+          "type" in p &&
+          (p as { type: string }).type === "tool-call"
+      );
+      if (hasToolCall) {
+        windowStart++;
+        while (
+          windowStart < modelMessages.length &&
+          modelMessages[windowStart].role === "tool"
+        )
+          windowStart++;
+        continue;
+      }
+    }
+    windowStart++;
+  }
+  const safeModelMessages = modelMessages.slice(windowStart);
+
   const result = streamText({
     model: google("gemini-3.5-flash"),
     system: buildSystemPrompt(lang),
-    messages: modelMessages,
+    messages: safeModelMessages,
     tools: {
       request_booking: tool({
         description:
