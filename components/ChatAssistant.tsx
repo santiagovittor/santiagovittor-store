@@ -650,9 +650,10 @@ export default function ChatAssistant() {
               display: "flex",
               flexDirection: "column",
               background:
-                "color-mix(in srgb, var(--surface) 85%, transparent)",
+                "linear-gradient(160deg, rgba(232, 255, 0, 0.015) 0%, transparent 40%), rgba(11, 11, 11, 0.92)",
               backdropFilter: "blur(16px)",
               WebkitBackdropFilter: "blur(16px)",
+              borderTop: "1px solid rgba(232, 255, 0, 0.25)",
               borderLeft: "1px solid var(--accent)",
               overflow: "hidden",
             }}
