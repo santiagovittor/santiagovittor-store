@@ -56,7 +56,7 @@ function NoiseGrain() {
         height: "100%",
         opacity: 0.04,
         pointerEvents: "none",
-        zIndex: 0,
+        zIndex: 2,
       }}
     >
       <filter id="chat-grain">
@@ -219,36 +219,40 @@ function WhatsAppHandoffCard({ lang }: { lang: "en" | "es" }) {
   );
 }
 
-function ThinkingIndicator({ reduced }: { reduced: boolean }) {
+function WaveformIndicator({ reduced, lang }: { reduced: boolean; lang: "en" | "es" }) {
+  const heights = [4, 8, 14, 20, 14, 8, 4];
+  const delays = ["0s", ".1s", ".2s", ".3s", ".4s", ".5s", ".6s"];
   return (
-    <div style={{ display: "flex", gap: "6px" }}>
+    <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
       <span aria-hidden="true" style={{ color: "var(--accent)", flexShrink: 0 }}>
         ▸
       </span>
       <div
-        aria-label="Thinking"
-        style={{ display: "flex", gap: "5px", alignItems: "center", padding: "4px 0" }}
+        aria-label="Processing"
+        style={{ display: "flex", alignItems: "flex-end", gap: "3px", height: "20px" }}
       >
-        {[0, 1, 2].map((i) => (
-          <motion.span
+        {heights.map((h, i) => (
+          <div
             key={i}
+            className="waveform-bar"
             style={{
-              color: "var(--muted)",
-              fontFamily: "var(--font-body)",
-              fontSize: "1rem",
-              lineHeight: 1,
+              height: `${h}px`,
+              animationDelay: delays[i],
+              ...(reduced ? { animation: "none", opacity: 0.3, transform: "scaleY(.35)" } : {}),
             }}
-            animate={reduced ? { opacity: 0.6 } : { opacity: [0.3, 1, 0.3] }}
-            transition={
-              reduced
-                ? {}
-                : { duration: 1.4, repeat: Infinity, delay: i * 0.2, ease: "easeInOut" }
-            }
-          >
-            •
-          </motion.span>
+          />
         ))}
       </div>
+      <span
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: "9px",
+          letterSpacing: ".12em",
+          color: "var(--muted)",
+        }}
+      >
+        {lang === "es" ? "PROCESANDO" : "PROCESSING"}
+      </span>
     </div>
   );
 }
@@ -537,10 +541,58 @@ export default function ChatAssistant() {
         .chip-btn:hover, .chip-btn:focus-visible { border-color: var(--accent) !important; color: var(--accent) !important; }
         .chip-btn:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
         .glitch-active { animation: glitch-shift 70ms ease-in-out infinite; }
+        @keyframes comet {
+          0%   { transform: skewX(-20deg) translateX(-100%); opacity: 0; }
+          5%   { opacity: 1; }
+          30%  { transform: skewX(-20deg) translateX(520%); opacity: 0; }
+          100% { transform: skewX(-20deg) translateX(-100%); opacity: 0; }
+        }
+        @keyframes waveform {
+          0%,100% { opacity: .3; transform: scaleY(.35); }
+          50%     { opacity: 1; transform: scaleY(1); }
+        }
+        .chat-panel::before {
+          content: '';
+          position: absolute;
+          top: -20%;
+          left: -40%;
+          width: 30%;
+          height: 140%;
+          background: linear-gradient(
+            to right,
+            transparent 0%,
+            rgba(232, 255, 0, 0.0) 20%,
+            rgba(232, 255, 0, 0.04) 50%,
+            rgba(232, 255, 0, 0.0) 80%,
+            transparent 100%
+          );
+          transform: skewX(-20deg);
+          animation: comet 5s ease-in-out infinite;
+          animation-direction: normal;
+          pointer-events: none;
+          z-index: 0;
+        }
+        .waveform-bar {
+          width: 3px;
+          background: var(--accent);
+          border-radius: 0;
+          animation: waveform 1.2s ease-in-out infinite;
+          transform-origin: bottom;
+        }
+        @property --beam-angle {
+          syntax: '<angle>';
+          initial-value: 0deg;
+          inherits: false;
+        }
+        @keyframes border-beam { to { --beam-angle: 360deg; } }
+        .beam-wrapper { animation: border-beam 6s linear infinite; }
         @media (prefers-reduced-motion: reduce) {
           .star-svg   { animation: star-filter 4s ease-in-out infinite !important; }
           .online-dot { animation: none !important; }
           .glitch-active { animation: none !important; }
+          .chat-panel::before { animation: none; }
+          .waveform-bar { animation: none !important; opacity: .3; transform: scaleY(.35); }
+          .beam-wrapper { animation: none; }
         }
       `}</style>
 
@@ -619,10 +671,7 @@ export default function ChatAssistant() {
       <AnimatePresence>
         {open && (
           <motion.div
-            ref={panelRef}
-            role="dialog"
-            aria-modal="true"
-            aria-label={S.ariaChat}
+            className="beam-wrapper"
             initial={
               prefersReduced ? { opacity: 0 } : { clipPath: clipOrigin }
             }
@@ -646,25 +695,36 @@ export default function ChatAssistant() {
               right: 0,
               width: "min(420px, 100vw)",
               height: "100dvh",
-              zIndex: 40,
-              display: "flex",
-              flexDirection: "column",
-              background:
-                "linear-gradient(160deg, rgba(232, 255, 0, 0.015) 0%, transparent 40%), rgba(11, 11, 11, 0.92)",
-              backdropFilter: "blur(16px)",
-              WebkitBackdropFilter: "blur(16px)",
-              borderTop: "1px solid rgba(232, 255, 0, 0.25)",
-              borderLeft: "1px solid var(--accent)",
-              overflow: "hidden",
+              zIndex: 39,
+              padding: "1px",
+              background: "conic-gradient(from var(--beam-angle), transparent 0%, rgba(232, 255, 0, 0.6) 5%, transparent 10%)",
             }}
           >
+            <div
+              ref={panelRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label={S.ariaChat}
+              className="chat-panel"
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                background:
+                  "linear-gradient(160deg, rgba(232, 255, 0, 0.015) 0%, transparent 40%), rgba(11, 11, 11, 0.92)",
+                backdropFilter: "blur(16px)",
+                WebkitBackdropFilter: "blur(16px)",
+                overflow: "hidden",
+              }}
+            >
             <NoiseGrain />
 
             {/* Content layer above grain */}
             <div
               style={{
                 position: "relative",
-                zIndex: 1,
+                zIndex: 2,
                 display: "flex",
                 flexDirection: "column",
                 height: "100%",
@@ -813,7 +873,7 @@ export default function ChatAssistant() {
 
                   if (msg.role === "assistant") {
                     return (
-                      <div key={msg.id} style={{ display: "flex", gap: "6px" }}>
+                      <div key={msg.id} style={{ display: "flex", gap: "6px", borderLeft: "2px solid var(--accent)", background: "rgba(232, 255, 0, 0.03)", padding: "10px 16px" }}>
                         <span
                           aria-hidden="true"
                           style={{ color: "var(--accent)", flexShrink: 0 }}
@@ -897,11 +957,13 @@ export default function ChatAssistant() {
                     >
                       <span
                         style={{
-                          color: "var(--accent)",
+                          color: "var(--muted)",
                           fontFamily: "var(--font-body)",
                           lineHeight: 1.7,
                           textAlign: "right",
                           maxWidth: "85%",
+                          borderRight: "2px solid #333",
+                          padding: "10px 16px",
                         }}
                       >
                         {text}
@@ -919,7 +981,7 @@ export default function ChatAssistant() {
 
                 {/* Thinking indicator */}
                 {status === "submitted" && (
-                  <ThinkingIndicator reduced={prefersReduced} />
+                  <WaveformIndicator reduced={prefersReduced} lang={lang} />
                 )}
 
                 {/* Error */}
@@ -967,28 +1029,30 @@ export default function ChatAssistant() {
                   flexShrink: 0,
                 }}
               >
-                <textarea
-                  ref={textareaRef}
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder={S.placeholder}
-                  rows={1}
-                  className="chat-textarea"
-                  style={{
-                    flex: 1,
-                    background: "transparent",
-                    border: "none",
-                    outline: "none",
-                    fontFamily: "var(--font-body)",
-                    fontSize: "0.9375rem",
-                    color: "var(--accent)",
-                    caretColor: "var(--accent)",
-                    resize: "none",
-                    lineHeight: 1.5,
-                    padding: "8px 0",
-                  }}
-                />
+                <div style={{ flex: 1 }}>
+                  <textarea
+                    ref={textareaRef}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder={S.placeholder}
+                    rows={1}
+                    className="chat-textarea"
+                    style={{
+                      width: "100%",
+                      background: "transparent",
+                      border: "none",
+                      outline: "none",
+                      fontFamily: "var(--font-body)",
+                      fontSize: "0.9375rem",
+                      color: "var(--accent)",
+                      caretColor: "var(--accent)",
+                      resize: "none",
+                      lineHeight: 1.5,
+                      padding: "8px 0",
+                    }}
+                  />
+                </div>
                 <button
                   onClick={handleSend}
                   disabled={isStreaming || !input.trim()}
@@ -1014,6 +1078,7 @@ export default function ChatAssistant() {
                   ▸
                 </button>
               </div>
+            </div>
             </div>
           </motion.div>
         )}
