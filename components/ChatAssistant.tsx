@@ -541,36 +541,9 @@ export default function ChatAssistant() {
         .chip-btn:hover, .chip-btn:focus-visible { border-color: var(--accent) !important; color: var(--accent) !important; }
         .chip-btn:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
         .glitch-active { animation: glitch-shift 70ms ease-in-out infinite; }
-        @keyframes comet {
-          0%   { transform: skewX(-20deg) translateX(-100%); opacity: 0; }
-          5%   { opacity: 1; }
-          30%  { transform: skewX(-20deg) translateX(520%); opacity: 0; }
-          100% { transform: skewX(-20deg) translateX(-100%); opacity: 0; }
-        }
         @keyframes waveform {
           0%,100% { opacity: .3; transform: scaleY(.35); }
           50%     { opacity: 1; transform: scaleY(1); }
-        }
-        .chat-panel::before {
-          content: '';
-          position: absolute;
-          top: -20%;
-          left: -40%;
-          width: 30%;
-          height: 140%;
-          background: linear-gradient(
-            to right,
-            transparent 0%,
-            rgba(232, 255, 0, 0.0) 20%,
-            rgba(232, 255, 0, 0.04) 50%,
-            rgba(232, 255, 0, 0.0) 80%,
-            transparent 100%
-          );
-          transform: skewX(-20deg);
-          animation: comet 5s ease-in-out infinite;
-          animation-direction: normal;
-          pointer-events: none;
-          z-index: 0;
         }
         .waveform-bar {
           width: 3px;
@@ -579,20 +552,48 @@ export default function ChatAssistant() {
           animation: waveform 1.2s ease-in-out infinite;
           transform-origin: bottom;
         }
-        @property --beam-angle {
-          syntax: '<angle>';
-          initial-value: 0deg;
-          inherits: false;
+        .chat-panel-border {
+          background: conic-gradient(
+            from var(--border-angle),
+            var(--border) 0deg,
+            rgba(232,255,0,0.35) 30deg,
+            var(--accent) 50deg,
+            rgba(232,255,0,0.35) 70deg,
+            var(--border) 100deg,
+            var(--border) 360deg
+          );
+          animation: border-rotate 3s linear infinite;
         }
-        @keyframes border-beam { to { --beam-angle: 360deg; } }
-        .beam-wrapper { animation: border-beam 6s linear infinite; }
+        .chat-panel::before {
+          content: '';
+          position: absolute;
+          top: -20%; left: -40%;
+          width: 28%; height: 140%;
+          background: linear-gradient(to right,
+            transparent 0%,
+            rgba(232,255,0,0.0) 20%,
+            rgba(232,255,0,0.045) 50%,
+            rgba(232,255,0,0.0) 80%,
+            transparent 100%
+          );
+          transform: skewX(-20deg) translateX(-100%);
+          animation: comet 7s ease-in-out infinite;
+          pointer-events: none;
+          z-index: 0;
+        }
+        @keyframes comet {
+          0%   { transform: skewX(-20deg) translateX(-100%); opacity: 0; }
+          6%   { opacity: 1; }
+          36%  { transform: skewX(-20deg) translateX(520%); opacity: 0; }
+          100% { transform: skewX(-20deg) translateX(-100%); opacity: 0; }
+        }
         @media (prefers-reduced-motion: reduce) {
           .star-svg   { animation: star-filter 4s ease-in-out infinite !important; }
           .online-dot { animation: none !important; }
           .glitch-active { animation: none !important; }
-          .chat-panel::before { animation: none; }
           .waveform-bar { animation: none !important; opacity: .3; transform: scaleY(.35); }
-          .beam-wrapper { animation: none; }
+          .chat-panel::before { animation: none; }
+          .chat-panel-border { animation: none; background: var(--border); }
         }
       `}</style>
 
@@ -600,7 +601,7 @@ export default function ChatAssistant() {
       <div
         style={{
           position: "fixed",
-          bottom: isMobile ? "72px" : "32px",
+          bottom: isMobile ? "72px" : (lang === "es" ? "76px" : "32px"),
           right: "32px",
           zIndex: 50,
           width: "44px",
@@ -671,7 +672,6 @@ export default function ChatAssistant() {
       <AnimatePresence>
         {open && (
           <motion.div
-            className="beam-wrapper"
             initial={
               prefersReduced ? { opacity: 0 } : { clipPath: clipOrigin }
             }
@@ -689,6 +689,7 @@ export default function ChatAssistant() {
                     ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
                   }
             }
+            className="chat-panel-border"
             style={{
               position: "fixed",
               top: 0,
@@ -697,7 +698,6 @@ export default function ChatAssistant() {
               height: "100dvh",
               zIndex: 39,
               padding: "1px",
-              background: "conic-gradient(from var(--beam-angle), transparent 0%, rgba(232, 255, 0, 0.6) 5%, transparent 10%)",
             }}
           >
             <div
@@ -707,14 +707,13 @@ export default function ChatAssistant() {
               aria-label={S.ariaChat}
               className="chat-panel"
               style={{
+                position: "relative",
+                zIndex: 1,
                 width: "100%",
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",
-                background:
-                  "linear-gradient(160deg, rgba(232, 255, 0, 0.015) 0%, transparent 40%), rgba(11, 11, 11, 0.92)",
-                backdropFilter: "blur(16px)",
-                WebkitBackdropFilter: "blur(16px)",
+                background: "rgb(11, 11, 11)",
                 overflow: "hidden",
               }}
             >
