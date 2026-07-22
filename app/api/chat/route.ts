@@ -11,6 +11,7 @@ import {
 } from "ai";
 import type { UIMessage } from "ai";
 import { google } from "@ai-sdk/google";
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { z } from "zod";
 import { createHash } from "crypto";
 import { Resend } from "resend";
@@ -21,6 +22,24 @@ import {
 } from "@/lib/gemini";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+const nvidia = createOpenAICompatible({
+  name: "nvidia",
+  baseURL: "https://integrate.api.nvidia.com/v1",
+  apiKey: process.env.NVIDIA_API_KEY ?? "",
+});
+
+// Primary: Gemini 2.5 Flash (free). thinkingBudget:0 is required — with thinking on
+// it returns empty completions on booking-intent turns instead of calling the tool.
+// Best on the hardened prompt: refuses injection/leak, clean voice, reliable tools.
+// Fallback: NVIDIA NIM gpt-oss-20b (free, cross-provider) when Gemini 4xx/5xx/times out.
+//   Weaker at persona/injection, but only runs when Gemini is down; submit_contact
+//   emails a hardcoded owner address, so worst case is owner-spam, not exfiltration.
+// gemini-3.5-flash removed — it 503s under load and hangs the chat.
+const MODEL_CHAIN = [
+  google("gemini-2.5-flash"),
+  nvidia("openai/gpt-oss-20b"),
+];
 
 const UIMessagePartSchema = z
   .object({ type: z.string(), text: z.string().optional() })
@@ -149,49 +168,74 @@ export async function POST(req: NextRequest) {
   }
   const safeModelMessages = modelMessages.slice(windowStart);
 
-  const result = streamText({
-    model: google("gemini-3.5-flash"),
-    system: buildSystemPrompt(lang),
-    messages: safeModelMessages,
-    tools: {
-      request_booking: tool({
-        description:
-          "User wants to schedule a call. Call this when the user asks to book, schedule, set up a call, or similar.",
-        inputSchema: z.object({}),
-        execute: async () => ({ status: "booking_requested" }),
+  const tools = {
+    request_booking: tool({
+      description:
+        "User wants to schedule a call. Call this when the user asks to book, schedule, set up a call, or similar.",
+      inputSchema: z.object({}),
+      execute: async () => ({ status: "booking_requested" }),
+    }),
+    submit_contact: tool({
+      description:
+        "User wants Santiago to follow up by email. Call this when user says: 'leave my email', 'have him email me', 'follow up by email', 'dejame el mail', 'que me escriba', or any email follow-up request. Collect name and email first, then call immediately.",
+      inputSchema: z.object({
+        name: z.string().min(1),
+        email: z.string().email(),
+        message: z.string().min(1).max(1000),
       }),
-      submit_contact: tool({
-        description:
-          "User wants Santiago to follow up by email. Call this when user says: 'leave my email', 'have him email me', 'follow up by email', 'dejame el mail', 'que me escriba', or any email follow-up request. Collect name and email first, then call immediately.",
-        inputSchema: z.object({
-          name: z.string().min(1),
-          email: z.string().email(),
-          message: z.string().min(1).max(1000),
-        }),
-        execute: async (input) => {
-          const { name, email, message } = input;
-          try {
-            await resend.emails.send({
-              from: "Contact Form <onboarding@resend.dev>",
-              to: "svittordev@gmail.com",
-              subject: `New chat contact: ${name}`,
-              text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-            });
-            return { status: "contact_received", email };
-          } catch {
-            return { status: "contact_error" };
-          }
-        },
-      }),
-      request_whatsapp_handoff: tool({
-        description:
-          "User wants to continue on WhatsApp. Call this when user says: 'WhatsApp', 'text me', 'message me', 'mensajeáme', 'por WhatsApp', or any async messaging request.",
-        inputSchema: z.object({}),
-        execute: async () => ({ status: "whatsapp_requested" }),
-      }),
-    },
-    stopWhen: stepCountIs(5),
-  });
+      execute: async (input) => {
+        const { name, email, message } = input;
+        try {
+          await resend.emails.send({
+            from: "Contact Form <onboarding@resend.dev>",
+            to: "svittordev@gmail.com",
+            subject: `New chat contact: ${name}`,
+            text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+          });
+          return { status: "contact_received", email };
+        } catch {
+          return { status: "contact_error" };
+        }
+      },
+    }),
+    request_whatsapp_handoff: tool({
+      description:
+        "User wants to continue on WhatsApp. Call this when user says: 'WhatsApp', 'text me', 'message me', 'mensajeáme', 'por WhatsApp', or any async messaging request.",
+      inputSchema: z.object({}),
+      execute: async () => ({ status: "whatsapp_requested" }),
+    }),
+  };
 
-  return result.toUIMessageStreamResponse();
+  const system = buildSystemPrompt(lang);
+
+  // Buffer-then-emit so a provider failure surfaces as a catchable error
+  // (not a swallowed hang) and we can fail over. Replies are tiny + sub-second,
+  // so buffering is imperceptible and toUIMessageStream still replays tool parts.
+  // ponytail: on a mid-stream failure after submit_contact's email already sent,
+  // the fallback could re-send. Rare enough to accept; revisit if it ever recurs.
+  for (const model of MODEL_CHAIN) {
+    let capturedError: unknown;
+    const result = streamText({
+      model,
+      system,
+      messages: safeModelMessages,
+      tools,
+      stopWhen: stepCountIs(5),
+      maxRetries: 1,
+      providerOptions: {
+        google: { thinkingConfig: { thinkingBudget: 0 } },
+      },
+      onError: (e) => {
+        capturedError = (e as { error?: unknown })?.error ?? e;
+      },
+    });
+    await result.consumeStream();
+    if (capturedError) continue;
+    return result.toUIMessageStreamResponse();
+  }
+
+  return NextResponse.json(
+    { error: "AI temporarily unavailable" },
+    { status: 503 }
+  );
 }

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.74",
+    "@ai-sdk/openai-compatible": "^2.0.62",
     "@ai-sdk/react": "^3.0.186",
     "@calcom/embed-react": "^1.5.3",
     "@flodlc/nebula": "^1.0.56",
