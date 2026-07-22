@@ -7,7 +7,7 @@ export const SITE = {
   tagline: "Full-Stack Developer & AI Specialist",
   description:
     "I build web products and AI systems for international clients. Based in Buenos Aires, working remotely.",
-  url: "https://santiagovittor.com",
+  url: "https://www.santiagovittor.com",
   email: "svittordev@gmail.com",
   whatsapp: "https://wa.me/5491162300345", //
   location: "Buenos Aires, Argentina (Remote)",
