@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, DM_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import { siteMetadata } from "@/lib/metadata";
 import Navbar from "@/components/layout/Navbar";
@@ -26,12 +28,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
   return (
     <html lang="en" className={`${bebasNeue.variable} ${dmMono.variable}`}>
       <body>
         <Navbar />
         {children}
         <ChatAssistant />
+        <Analytics />
+        {gaId && <GoogleAnalytics gaId={gaId} />}
       </body>
     </html>
   );
