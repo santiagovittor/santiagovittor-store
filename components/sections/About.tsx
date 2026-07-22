@@ -73,12 +73,12 @@ export default function About() {
               build web apps, AI tools, and CRMs for international clients.
             </p>
             <a
-              href="https://santiagovittor.com"
+              href="https://santiagovittor.online"
               target="_blank"
               rel="noopener noreferrer"
               className="font-body text-sm text-[var(--muted)] hover:text-[var(--accent)] transition-colors duration-200 flex items-center gap-2 group focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
             >
-              More at santiagovittor.com
+              More at santiagovittor.online
               <span className="inline-block group-hover:translate-x-1 transition-transform duration-200">
                 →
               </span>

@@ -7,7 +7,7 @@ export const SITE = {
   tagline: "Full-Stack Developer & AI Specialist",
   description:
     "I build web products and AI systems for international clients. Based in Buenos Aires, working remotely.",
-  url: "https://santiagovittor.store",
+  url: "https://santiagovittor.com",
   email: "svittordev@gmail.com",
   whatsapp: "https://wa.me/5491162300345", //
   location: "Buenos Aires, Argentina (Remote)",
@@ -23,7 +23,7 @@ export const NAV_LINKS = [
 export const SOCIAL_LINKS = [
   { label: "GitHub", href: "https://github.com/santiagovittor" },
   { label: "LinkedIn", href: "https://linkedin.com/in/santiago-vittor" },
-  { label: "Portfolio", href: "https://santiagovittor.com" },
+  { label: "Portfolio", href: "https://santiagovittor.online" },
 ] as const;
 
 export type Service = {
@@ -109,7 +109,7 @@ export const PROJECTS: Project[] = [
     description:
       "RAG-powered chat that answers questions based exclusively on documented experience. Visitors can ask anything about my background and get grounded, cited answers.",
     tech: ["RAG", "JavaScript", "Next.js"],
-    href: "https://santiagovittor.com",
+    href: "https://santiagovittor.online",
     year: 2024,
   },
 ];

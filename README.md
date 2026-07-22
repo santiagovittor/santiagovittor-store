@@ -1,8 +1,8 @@
-# santiagovittor.store
+# santiagovittor.com
 
 Personal services site. Built to convert, not to impress other developers.
 
-**Live:** [santiagovittor.store](https://santiagovittor.store)
+**Live:** [santiagovittor.com](https://santiagovittor.com)
 
 ---
 
