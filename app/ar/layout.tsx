@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     languages: {
       "en": SITE.url,
       "es-AR": `${SITE.url}/ar`,
+      "x-default": SITE.url,
     },
   },
   openGraph: {
@@ -28,6 +29,40 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": `${SITE.url}/ar#service`,
+  name: "Sitios Web para Negocios — Santiago Vittor",
+  description:
+    "Diseño y desarrollo de sitios web para negocios argentinos. Lista en 48 horas.",
+  url: `${SITE.url}/ar`,
+  inLanguage: "es-AR",
+  areaServed: { "@type": "Country", name: "Argentina" },
+  provider: { "@id": `${SITE.url}/#person` },
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Buenos Aires",
+    addressCountry: "AR",
+  },
+  offers: {
+    "@type": "Offer",
+    name: "Sitio web para tu negocio",
+    price: "180000",
+    priceCurrency: "ARS",
+    description: "Web lista en 48 horas. Sin reuniones largas.",
+    availability: "https://schema.org/InStock",
+  },
+};
+
 export default function ArLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <div lang="es-AR">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      {children}
+    </div>
+  );
 }

@@ -13,6 +13,7 @@ export const siteMetadata: Metadata = {
     languages: {
       "en": SITE.url,
       "es-AR": `${SITE.url}/ar`,
+      "x-default": SITE.url,
     },
   },
   openGraph: {

@@ -10,28 +10,54 @@ import { SITE, SOCIAL_LINKS } from "@/lib/constants";
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "Person",
-  name: SITE.name,
-  jobTitle: SITE.tagline,
-  url: SITE.url,
-  email: SITE.email,
-  sameAs: SOCIAL_LINKS.filter((l) =>
-    ["GitHub", "LinkedIn"].includes(l.label)
-  ).map((l) => l.href),
-  knowsAbout: [
-    "Next.js",
-    "React",
-    "Node.js",
-    "Python",
-    "RAG pipelines",
-    "LLM workflows",
-    "prompt engineering",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${SITE.url}/#person`,
+      name: SITE.name,
+      jobTitle: SITE.tagline,
+      url: SITE.url,
+      email: SITE.email,
+      sameAs: SOCIAL_LINKS.filter((l) =>
+        ["GitHub", "LinkedIn"].includes(l.label)
+      ).map((l) => l.href),
+      knowsAbout: [
+        "Next.js",
+        "React",
+        "Node.js",
+        "Python",
+        "RAG pipelines",
+        "LLM workflows",
+        "prompt engineering",
+      ],
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Buenos Aires",
+        addressCountry: "AR",
+      },
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${SITE.url}/#service`,
+      name: SITE.name,
+      description: SITE.description,
+      url: SITE.url,
+      provider: { "@id": `${SITE.url}/#person` },
+      areaServed: "Worldwide",
+      availableLanguage: ["en", "es"],
+      knowsAbout: [
+        "web development",
+        "AI chatbots",
+        "RAG pipelines",
+        "CRM development",
+      ],
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Buenos Aires",
+        addressCountry: "AR",
+      },
+    },
   ],
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Buenos Aires",
-    addressCountry: "AR",
-  },
 };
 
 export default function Home() {
