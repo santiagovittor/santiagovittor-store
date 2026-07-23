@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Sitios Web para Negocios Argentinos — Santiago Vittor",
+  title: { absolute: "Sitios Web para Negocios Argentinos — Santiago Vittor" },
   description:
     "Una web para tu negocio. $180.000 ARS. Lista en 48 horas. Sin reuniones largas. Sin proyectos de meses.",
   alternates: {
